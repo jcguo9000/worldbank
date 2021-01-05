@@ -39,15 +39,22 @@ def return_figures(countries=country_default):
 
   # World Bank indicators of interest for pulling data
 
-    indicators = [
-        'NY.GDP.MKTP.CD', # GDP (current US$)
-        'SP.POP.GROW',	# Population growth (annual %)
-        'SP.RUR.TOTL.ZS', #Total rural population
-        'AG.LND.FRST.ZS', #Total forested land
-        'SI.POV.DDAY', #Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)
-        'NE.EXP.GNFS.ZS',# Export of goods and services (% of GDP)
-        'SP.URB.TOTL.IN.ZS',# Urban population (% of total population)
-        'TM.VAL.FUEL.ZS.UN',# Fuel import (% of merchandise import)
+    indicators = [  # GDP (current US$)
+                    # Population growth (annual %)
+                    # Total rural population
+                    # Total forested land
+                    # Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)
+                    # Export of goods and services (% of GDP)
+                    # Urban population (% of total population)
+                    # Fuel import (% of merchandise import)
+        'NY.GDP.MKTP.CD',
+        'SP.POP.GROW',
+        'SP.RUR.TOTL.ZS',
+        'AG.LND.FRST.ZS',
+        'SI.POV.DDAY',
+        'NE.EXP.GNFS.ZS',
+        'SP.URB.TOTL.IN.ZS',
+        'TM.VAL.FUEL.ZS.UN',
         ]
 
     data_frames = []  # stores the data frames with the indicator data of interest
@@ -172,11 +179,10 @@ def return_figures(countries=country_default):
              yaxis=dict(title='% of Area that is Forested', range=[0,
              100], dtick=10))
 
-	#fifth chart shows the poverty headcount ratio at $1.9 per day (2011 PPP) of total population from 1990 to 2015
-			 
+    # fifth chart shows the poverty headcount ratio at $1.9 per day (2011 PPP) of total population from 1990 to 2015
+
     graph_five = []
     df_five = pd.DataFrame(data_frames[4])
-
 
     for country in countrylist:
         x_val = df_five[df_five['country'] == country].date.tolist()
@@ -188,14 +194,11 @@ def return_figures(countries=country_default):
         dict(title='Poverty Headcount Ratio at $1.90/day (2011 PPP) <br> of BRICS countries from 1990 to 2015'
              , xaxis=dict(title='Year', autotick=False, tick0=1990,
              dtick=5), yaxis=dict(title='Percent'))
-    
-	
-	
-	#sixth chart shows the percentage of the exported service and goods	as the total GDP
-	graph_six = []
+
+    # sixth chart shows the percentage of the exported service and goods....as the total GDP
+
+    graph_six = []
     df_six = pd.DataFrame(data_frames[5])
-
-
 
     for country in countrylist:
         x_val = df_six[df_six['country'] == country].date.tolist()
@@ -208,8 +211,8 @@ def return_figures(countries=country_default):
              , xaxis=dict(title='Year', autotick=False, tick0=1990,
              dtick=5), yaxis=dict(title='Percent'))
 
-			 
-	#seventh chart shows the percentage of urban population of the total population for these countries from 1990 to 2015			 
+    # seventh chart shows the percentage of urban population of the total population for these countries from 1990 to 2015............
+
     graph_seven = []
     df_seven = pd.DataFrame(data_frames[6])
 
@@ -224,9 +227,9 @@ def return_figures(countries=country_default):
              , xaxis=dict(title='Year', autotick=False, tick0=1990,
              dtick=5), yaxis=dict(title='Percent'))
 
-	#eight chart shows the percentage of import fuel as in all the merchandise imported for these countries from 1990 to 2015    
-	
-	graph_eight = []
+    # eight chart shows the percentage of import fuel as in all the merchandise imported for these countries from 1990 to 2015
+
+    graph_eight = []
     df_eight = pd.DataFrame(data_frames[7])
 
     for country in countrylist:
