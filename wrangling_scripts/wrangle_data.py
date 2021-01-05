@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
@@ -93,7 +95,8 @@ def return_figures(countries=country_default):
   # this country list is re-used by all the charts to ensure legends have the same
   # order and color
 
-    countrylist = df_one.country.unique().tolist().sort()
+    countrylist = df_one.country.unique().tolist()
+    countrylist.sort()
 
     for country in countrylist:
         x_val = df_one[df_one['country'] == country].date.tolist()
