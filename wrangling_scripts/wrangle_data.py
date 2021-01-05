@@ -5,18 +5,20 @@ import plotly.colors
 from collections import OrderedDict
 import requests
 
-# default list of all countries of interest
+# default list of all countries of interest: BRICS
+# BRICS is the group composed by the five major emerging countries
+# Brazil, Russia, India and South Africa
 
 country_default = OrderedDict([('Brazil', 'BRA'), ('Russia', 'RUS'),
                               ('India', 'IND'), ('China', 'CHN'),
-                              ('South Afica', 'ZAF')])
+                              ('South Africa', 'ZAF')])
 
 
 def return_figures(countries=country_default):
-    """Creates four plotly visualizations using the World Bank API
+    """Creates six plotly visualizations using the World Bank API
   # Example of the World Bank API endpoint:
-  # arable land for the United States and Brazil from 1990 to 2015
-  # http://api.worldbank.org/v2/countries/usa;bra/indicators/AG.LND.ARBL.HA?date=1990:2015&per_page=1000&format=json
+  # GDP in US$ for the United States and China from 1990 to 2015
+  # http://api.worldbank.org/v2/countries/usa;chn/indicators/NY.GDP.MKTP.CD?date=1990:2015&format=json
     Args:
         country_default (dict): list of countries for filtering the data
     Returns:
@@ -38,14 +40,14 @@ def return_figures(countries=country_default):
   # World Bank indicators of interest for pulling data
 
     indicators = [
-        'NY.GDP.MKTP.CD',
-        'SP.POP.GROW',
-        'SP.RUR.TOTL.ZS',
-        'AG.LND.FRST.ZS',
-        'SI.POV.DDAY',
-        'NE.EXP.GNFS.ZS',
-        'SP.URB.TOTL.IN.ZS',
-        'TM.VAL.FUEL.ZS.UN',
+        'NY.GDP.MKTP.CD', # GDP (current US$)
+        'SP.POP.GROW',	# Population growth (annual %)
+        'SP.RUR.TOTL.ZS', #Total rural population
+        'AG.LND.FRST.ZS', #Total forested land
+        'SI.POV.DDAY', #Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)
+        'NE.EXP.GNFS.ZS',# Export of goods and services (% of GDP)
+        'SP.URB.TOTL.IN.ZS',# Urban population (% of total population)
+        'TM.VAL.FUEL.ZS.UN',# Fuel import (% of merchandise import)
         ]
 
     data_frames = []  # stores the data frames with the indicator data of interest
@@ -72,21 +74,19 @@ def return_figures(countries=country_default):
 
         data_frames.append(data)
 
-  # first chart plots arable land from 1990 to 2015 in top 10 economies
+  # first chart plots the total GDP from 1990 to 2015 in BRICS countries
   # as a line chart
 
     graph_one = []
     df_one = pd.DataFrame(data_frames[0])
 
-  # filter and sort values for the visualization
-  # filtering plots the countries in decreasing order by their values
-  # df_one = df_one[(df_one['date'] == '2015') | (df_one['date'] == '1990')]
+  # filter values for the visualization
   # df_one.sort_values('value', ascending=False, inplace=True)
 
-  # this  country list is re-used by all the charts to ensure legends have the same
+  # this country list is re-used by all the charts to ensure legends have the same
   # order and color
 
-    countrylist = df_one.country.unique().tolist()
+    countrylist = df_one.country.unique().tolist().sort()
 
     for country in countrylist:
         x_val = df_one[df_one['country'] == country].date.tolist()
@@ -99,11 +99,9 @@ def return_figures(countries=country_default):
                       tick0=1990, dtick=5), yaxis=dict(title='GPD (US$)'
                       ))
 
-  # second chart plots ararble land for 2015 as a bar chart
+  # second chart plots the GDP of all countries in 2015 as a bar chart
 
     graph_two = []
-
-  # df_one.sort_values('value', ascending=False, inplace=True)
 
     df_one = df_one[df_one['date'] == '2015']
 
@@ -114,14 +112,10 @@ def return_figures(countries=country_default):
                       xaxis=dict(title='Country'),
                       yaxis=dict(title='GPD (US$)'))
 
-  # third chart plots percent of population that is rural from 1990 to 2015
+  # third chart plots the annual population growth from 1990 to 2015
 
     graph_three = []
     df_three = pd.DataFrame(data_frames[1])
-
-  # df_three = df_three[(df_three['date'] == '2015') | (df_three['date'] == '1990')]
-
-  # df_three.sort_values('value', ascending=False, inplace=True)
 
     for country in countrylist:
         x_val = df_three[df_three['country'] == country].date.tolist()
@@ -178,12 +172,11 @@ def return_figures(countries=country_default):
              yaxis=dict(title='% of Area that is Forested', range=[0,
              100], dtick=10))
 
+	#fifth chart shows the poverty headcount ratio at $1.9 per day (2011 PPP) of total population from 1990 to 2015
+			 
     graph_five = []
     df_five = pd.DataFrame(data_frames[4])
 
-  # df_three = df_three[(df_three['date'] == '2015') | (df_three['date'] == '1990')]
-
-  # df_three.sort_values('value', ascending=False, inplace=True)
 
     for country in countrylist:
         x_val = df_five[df_five['country'] == country].date.tolist()
@@ -195,12 +188,14 @@ def return_figures(countries=country_default):
         dict(title='Poverty Headcount Ratio at $1.90/day (2011 PPP) <br> of BRICS countries from 1990 to 2015'
              , xaxis=dict(title='Year', autotick=False, tick0=1990,
              dtick=5), yaxis=dict(title='Percent'))
-    graph_six = []
+    
+	
+	
+	#sixth chart shows the percentage of the exported service and goods	as the total GDP
+	graph_six = []
     df_six = pd.DataFrame(data_frames[5])
 
-  # df_three = df_three[(df_three['date'] == '2015') | (df_three['date'] == '1990')]
 
-  # df_three.sort_values('value', ascending=False, inplace=True)
 
     for country in countrylist:
         x_val = df_six[df_six['country'] == country].date.tolist()
@@ -209,10 +204,12 @@ def return_figures(countries=country_default):
                          name=country))
 
     layout_six = \
-        dict(title='Export of Service and Goods (% of GDD) <br> of BRICS countries from 1990 to 2015'
+        dict(title='Export of Service and Goods (% of GDP) <br> of BRICS countries from 1990 to 2015'
              , xaxis=dict(title='Year', autotick=False, tick0=1990,
              dtick=5), yaxis=dict(title='Percent'))
 
+			 
+	#seventh chart shows the percentage of urban population of the total population for these countries from 1990 to 2015			 
     graph_seven = []
     df_seven = pd.DataFrame(data_frames[6])
 
@@ -227,7 +224,9 @@ def return_figures(countries=country_default):
              , xaxis=dict(title='Year', autotick=False, tick0=1990,
              dtick=5), yaxis=dict(title='Percent'))
 
-    graph_eight = []
+	#eight chart shows the percentage of import fuel as in all the merchandise imported for these countries from 1990 to 2015    
+	
+	graph_eight = []
     df_eight = pd.DataFrame(data_frames[7])
 
     for country in countrylist:
