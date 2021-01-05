@@ -159,14 +159,14 @@ def return_figures(countries=country_default):
             text.append(str(country) + ' ' + str(year))
 
         graph_four.append(
-          go.Scatter(
-          x = x_val,
-          y = y_val,
-          mode = 'lines+markers',
-          text = text,
-          name = country,
-          textposition = 'top'
-          )
+			go.Scatter(
+			x = x_val,
+			y = y_val,
+			mode = 'lines+markers',
+			text = text,
+			name = country,
+			textposition = 'top center'
+			)
         )
 
     layout_four = dict(title = '% of Population that is Rural versus <br> % of Land that is Forested <br> of BRICS countries 1990-2015',
@@ -273,5 +273,4 @@ def return_figures(countries=country_default):
     figures.append(dict(data=graph_six, layout=layout_six))
     figures.append(dict(data=graph_seven, layout=layout_seven))
     figures.append(dict(data=graph_eight, layout=layout_eight))
-
-    return figures
+	return figures
